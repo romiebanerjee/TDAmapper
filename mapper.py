@@ -16,10 +16,6 @@ def flatten(A):
             return flatten(A[0]) + flatten(A[1:])
         else: return [A[0]] + flatten(A[1:])
 
-class Cover():
-    def __init__(self, cover_frames = []):
-        self.cover_frames = cover_frames #list of dataframes
-
 class Lens():
     def __init__(self, name):
         self.name = name
@@ -101,7 +97,7 @@ class Mapper():
         
         E = [(x,y) for (x,y) in pairs if [a for a in cluster_frames[int(x.split(",")[0])][int(x.split(",")[1])]["data_points"].values.tolist() if a in cluster_frames[int(y.split(",")[0])][int(y.split(",")[1])]["data_points"].values.tolist()] != []]
         
-        nodes = [{"id": v, "group": None} for v in V]
+        nodes = [{"id": v, "group": int(v.split(",")[0])} for v in V]
         links = [{"source": link[0], "target": link[1], "value": 1} for link in E]
 
         nerve = {"nodes":nodes, "links": links}
