@@ -1,49 +1,108 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
 <head>
-  <title>Force layout (with links)</title>
+  <title>Mapper Visualization (force layout)</title>
 </head>
 
+<link href='http://fonts.googleapis.com/css?family=Poiret+One' rel='stylesheet' type='text/css'>
+
+
 <style>
-circle {
-}
-line {
-  stroke: #999;
-}
-text {
+
+body {
+  background: white;
   text-anchor: middle;
   font-family: "Helvetica Neue", Helvetica, sans-serif;
   fill: #666;
   font-size: 16px;
+  color: grey
 }
+
+#mapper_info {
+  float: right;
+  width: 20%;
+  height: 20%;
+}
+
+
+div {
+  border: solid 5px #ccc;
+}
+
+circle {
+  opacity: 1;
+}
+line {
+  stroke: #999;
+}
+
+#scatterPlot {
+  fill: black;
+}
+
 </style>
 <body>
-  
-    <svg width="1000" height="1000">
-    <g class = "links"></g> 
-    <g class = "nodes"></g>  
+  <div id = "main_window">
+    <h2>Mapper Visualization </h2>
+    <svg width = "1000" height = "800" id= "mapperViz">
+    <g class = "links"></g>
+    <g class = "nodes"></g>
     </svg>
- 
+    <div id = "mapper_info">
+      <h2> Mapper parameters </h2>
+    </div>
+    <div id = "scatter_plot">
+      <h2> Data PCA2 scatter plot </h2>
+      <svg width = "1000" height = "800" id = "scatterPlot">
+        <g class = "scatter"></g>
+      </svg>
+    </div>
+    
+  </div>
+  
   <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.2.2/d3.min.js"></script>
   <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
 
 
 <script>
-var width = 1000, height = 1000
 
+svg = d3.select("#mapperViz"),
+width = +svg.attr("width"),
+height = +svg.attr("height");
 
 
 var simulation = d3.forceSimulation()
-  .force('charge', d3.forceManyBody().strength(-100))
+  .force('charge', d3.forceManyBody().strength(-20))
   .force('center', d3.forceCenter(width / 2, height / 2))
   .force("link", d3.forceLink().id(function(d) { return d.id; }))
   
-//var color = d3.scaleOrdinal(d3.schemeBlues[9]);
 
 
-d3.json("mapper_output.json", function(error, network){
+d3.json("mapperViz.json", function(error, network){
   if (error) throw error;
 
+// Mapper parameters display //
+
+  d3.select("#mapper_info").selectAll("#lens")
+    .data(network.lens)
+    .enter().append("h3")
+      .text(" Lens = " + network.lens[0]);
+  
+  d3.select("#mapper_info").selectAll("#rcover")
+    .data(network.rcover)
+    .enter().append("h3")
+      .text(" Range cover = " + network.rcover[0]);
+          
+
+//Force Link Network//
+
+  scaleRadius = d3.scaleLinear()  
+      .domain([0, network.max_weight])
+      .range([5,20]);
+
+  scaleColor = d3.scaleLinear()
+      .domain([0, network.rcover[0][0]])
+      .range([1,0]);
 
   simulation
       .nodes(network.nodes)
@@ -79,8 +138,8 @@ d3.json("mapper_output.json", function(error, network){
       .merge(u)
       .attr('cx', function(d) {return d.x;})
       .attr('cy', function(d) {return d.y;})
-      .attr('r', 7)
-      .attr('fill', function(d){ return d3.interpolateBlues((d.group)/10);});
+      .attr('r',  function (d) {return scaleRadius(d.weight);})
+      .attr('fill', function(d){ return d3.interpolateReds(scaleColor(d.group))});
    
 
     u.exit().remove()
@@ -90,6 +149,31 @@ d3.json("mapper_output.json", function(error, network){
     updateLinks()
     updateNodes()
   }
+
+
+//Data scatter plot
+  svg2 = d3.select("svg");
+  
+  var xScale = d3.scaleLinear().range([0,1000]);
+  var yScale = d3.scaleLinear().range([0,800]);
+
+
+  xScale.domain(d3.extent(network.scatter, function (d){ return d.x; }));
+  yScale.domain(d3.extent(network.scatter, function (d){ return d.y; }));
+
+  
+
+  var scatter_plot = svg2.select(".scatter").selectAll("circle").data(network.scatter);
+        scatter_plot.enter().append("circle").attr("r", 5);
+        scatter_plot
+          .attr("cx", function (d){ return xScale(d.x); })
+          .attr("cy", function (d){ return yScale(d.y); })
+          .attr("fill", "red");
+
+        scatter_plot.exit().remove();
+      
+
+
 })
 
 
