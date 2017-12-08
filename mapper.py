@@ -110,7 +110,7 @@ class Mapper():
 
         from sklearn.decomposition import PCA
         flat_data = PCA(n_components = 2).fit_transform(data)
-        scatter = [{"x": x, "y": y } for x in flat_data[:,0].tolist() for y in flat_data[:,1].tolist()]
+        scatter = [{"x": flat_data[i,0], "y": flat_data[i,1]} for i in range(len(flat_data))]
 
         
         viz = {"scatter": scatter, "lens":[self.lens], "rcover": [self.n_rcover], "max_weight": max_weight, "nodes":nodes, "links": links}
