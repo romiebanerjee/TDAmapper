@@ -83,35 +83,44 @@ class Mapper():
                 dbscan = DBSCAN(eps = eps, min_samples = min_samples).fit(C)
                 covering[i]["cluster"] = dbscan.labels_
                 cluster_frames[i] = [covering[i][covering[i]["cluster"] == label] for label in set(dbscan.labels_)]
-                index[i] = [str(i) + "," + str(j) for j in range(len(set(dbscan.labels_)))]
+                index[i] = [str(i) + "," + str(j) + "," + str(len(cluster_frames[i][j])) for j in range(len(set(dbscan.labels_)))]
         
         return cluster_frames, index
         
         
-    
     def make_nerve(self,data):
+
         cluster_frames, index = self.cluster(data)
+        
         V = flatten(index)
-        #print(V)
+        
         pairs = [(x,y) for x in V for y in V if V.index(x) < V.index(y)]
         
         E = [(x,y) for (x,y) in pairs if [a for a in cluster_frames[int(x.split(",")[0])][int(x.split(",")[1])]["data_points"].values.tolist() if a in cluster_frames[int(y.split(",")[0])][int(y.split(",")[1])]["data_points"].values.tolist()] != []]
         
-        nodes = [{"id": v, "group": int(v.split(",")[0])} for v in V]
-        links = [{"source": link[0], "target": link[1], "value": 1} for link in E]
-
-        nerve = {"nodes":nodes, "links": links}
-        nerve_json = json.dumps(nerve)
-
-        file = open("mapper_output.json", 'w')
-        file.write(nerve_json)
-        file.close()
-
+        
         return V,E
 
     
-    def fit(self,data):
-        return self.cluster(data), self.make_nerve(data)
+    def write_to_json(self,data):
+        V, E = self.make_nerve(data)
+        max_weight = max([int(v.split(",")[2]) for v in V])
+        nodes = [{"id": v, "group": int(v.split(",")[0]), "weight": int(v.split(",")[2])} for v in V]
+        links = [{"source": link[0], "target": link[1], "value": 1} for link in E]
+
+        from sklearn.decomposition import PCA
+        flat_data = PCA(n_components = 2).fit_transform(data)
+        scatter = [{"x": x, "y": y } for x in flat_data[:,0].tolist() for y in flat_data[:,1].tolist()]
+
+        
+        viz = {"scatter": scatter, "lens":[self.lens], "rcover": [self.n_rcover], "max_weight": max_weight, "nodes":nodes, "links": links}
+        viz_json = json.dumps(viz)
+
+        file = open("mapperViz.json", 'w')
+        file.write(viz_json)
+        file.close()
+
+        
     
 
 
