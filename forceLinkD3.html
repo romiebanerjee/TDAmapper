@@ -4,13 +4,11 @@
   <title>Mapper Visualization (force layout)</title>
 </head>
 
-<link href='http://fonts.googleapis.com/css?family=Poiret+One' rel='stylesheet' type='text/css'>
-
 
 <style>
 
 body {
-  background: white;
+  background: none;
   text-anchor: middle;
   font-family: "Helvetica Neue", Helvetica, sans-serif;
   fill: #666;
@@ -18,12 +16,22 @@ body {
   color: grey
 }
 
-#mapper_info {
-  float: right;
-  width: 20%;
-  height: 20%;
+
+svg {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
+.legend {
+
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.scatterDots{}
+
+h2 {
+    color: #ccc;
+    text-shadow: 2px 2px 4px #000000;
+}
 
 div {
   border: solid 5px #ccc;
@@ -36,29 +44,29 @@ line {
   stroke: #999;
 }
 
-#scatterPlot {
-  fill: black;
-}
 
 </style>
 <body>
-  <div id = "main_window">
-    <h2>Mapper Visualization </h2>
-    <svg width = "1000" height = "800" id= "mapperViz">
-    <g class = "links"></g>
-    <g class = "nodes"></g>
-    </svg>
-    <div id = "mapper_info">
-      <h2> Mapper parameters </h2>
-    </div>
-    <div id = "scatter_plot">
-      <h2> Data PCA2 scatter plot </h2>
-      <svg width = "1000" height = "800" id = "scatterPlot">
+<div ><h2> Input Data Scatter Plot (PCA2) </h2>
+<svg  width = "500" height = "400" id = "scatterPlot">
         <g class = "scatter"></g>
       </svg>
-    </div>
+</div>
+
+  <div id = "main_window">
+    <h2>Mapper Visualization </h2>
     
-  </div>
+    <svg width = "1400" height = "800" id = "mapperViz">
+    <g class = "links"></g>
+    <g class = "nodes"></g>
+    <foreignobject width="300" height="400" x = "1100" y = "0">
+                
+                    <div class = "legend"> </div>                
+            </foreignobject>
+    
+    </svg>
+      
+     </div>
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.2.2/d3.min.js"></script>
   <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
@@ -72,7 +80,7 @@ height = +svg.attr("height");
 
 
 var simulation = d3.forceSimulation()
-  .force('charge', d3.forceManyBody().strength(-20))
+  .force('charge', d3.forceManyBody().strength(-10))
   .force('center', d3.forceCenter(width / 2, height / 2))
   .force("link", d3.forceLink().id(function(d) { return d.id; }))
   
@@ -83,26 +91,29 @@ d3.json("mapperViz.json", function(error, network){
 
 // Mapper parameters display //
 
-  d3.select("#mapper_info").selectAll("#lens")
+  d3.select(".legend").selectAll("#lens")
     .data(network.lens)
     .enter().append("h3")
       .text(" Lens = " + network.lens[0]);
   
-  d3.select("#mapper_info").selectAll("#rcover")
+  d3.select(".legend").selectAll("#rcover")
     .data(network.rcover)
     .enter().append("h3")
       .text(" Range cover = " + network.rcover[0]);
+
+  d3.select(".legend").append("h3")
+    .text("Clusterer = DBSCAN")    
           
 
 //Force Link Network//
 
   scaleRadius = d3.scaleLinear()  
       .domain([0, network.max_weight])
-      .range([5,20]);
+      .range([25,100]);
 
   scaleColor = d3.scaleLinear()
       .domain([0, network.rcover[0][0]])
-      .range([1,0]);
+      .range([1,0.2]);
 
   simulation
       .nodes(network.nodes)
@@ -138,9 +149,12 @@ d3.json("mapperViz.json", function(error, network){
       .merge(u)
       .attr('cx', function(d) {return d.x;})
       .attr('cy', function(d) {return d.y;})
-      .attr('r',  function (d) {return scaleRadius(d.weight);})
-      .attr('fill', function(d){ return d3.interpolateReds(scaleColor(d.group))});
-   
+      .attr('r',  function (d) {return Math.sqrt(scaleRadius(d.weight));})
+      .attr('fill', function(d){ return d3.interpolateReds(scaleColor(d.group))})
+      .call(d3.drag()
+          .on("start", dragstarted)
+          .on("drag", dragged)
+          .on("end", dragended));
 
     u.exit().remove()
   }
@@ -150,31 +164,55 @@ d3.json("mapperViz.json", function(error, network){
     updateNodes()
   }
 
+  function dragstarted(d) {
+  if (!d3.event.active) simulation.alphaTarget(0.3).restart();
+  d.fx = d.x;
+  d.fy = d.y;
+}
 
-//Data scatter plot
-  svg2 = d3.select("svg");
+function dragged(d) {
+  d.fx = d3.event.x;
+  d.fy = d3.event.y;
+}
+
+function dragended(d) {
+  if (!d3.event.active) simulation.alphaTarget(0);
+  d.fx = null;
+  d.fy = null;
+ cv}
+ 
+
+
+
+//Data --- scatter 
+
+  var svg2 = d3.select("#scatterPlot");
+
+  var data = network.scatter;
+
+  var xScale = d3.scaleLinear().range([0,500]);
+  var yScale = d3.scaleLinear().range([400,0]);
+
+
+  xScale.domain(d3.extent(data, function (d){ return d.x; }));
+  yScale.domain(d3.extent(data, function (d){ return d.y; }));
+
   
-  var xScale = d3.scaleLinear().range([0,1000]);
-  var yScale = d3.scaleLinear().range([0,800]);
 
-
-  xScale.domain(d3.extent(network.scatter, function (d){ return d.x; }));
-  yScale.domain(d3.extent(network.scatter, function (d){ return d.y; }));
-
-  
-
-  var scatter_plot = svg2.select(".scatter").selectAll("circle").data(network.scatter);
-        scatter_plot.enter().append("circle").attr("r", 5);
-        scatter_plot
+  var plot = svg2.select(".scatter").selectAll(".scatterDots")
+          .data(data);
+        plot.enter().append("circle")
+          
           .attr("cx", function (d){ return xScale(d.x); })
           .attr("cy", function (d){ return yScale(d.y); })
-          .attr("fill", "red");
+          .attr("r", 2)
+          .attr("fill", "steelblue");
+          
 
-        scatter_plot.exit().remove();
+        plot.exit().remove();
       
+     })
 
-
-})
 
 
   </script>
