@@ -6,9 +6,9 @@ https://research.math.osu.edu/tgda/mapperPBG.pdf
 
 Input: Dataset in the form of a numpy array and a real valued continous function on the dataset
 
-Output: Networ graph representing topological summary
+Output: Network graph representing topological summary
 
-Sample output:
+Sample output: (Iris dataset)
 
 https://romiebanerjee.github.io/
 
