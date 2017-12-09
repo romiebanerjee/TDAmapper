@@ -1,6 +1,6 @@
 # TDAmapper
 
-Implementation based of algorithm of Singh et.al.
+Implementation of algorithm of Singh et.al.
 
 https://research.math.osu.edu/tgda/mapperPBG.pdf
 
