@@ -1,0 +1,39 @@
+
+
+body {
+  background: none;
+  text-anchor: middle;
+  font-family: "Helvetica Neue", Helvetica, sans-serif;
+  fill: #666;
+  font-size: 16px;
+  color: grey
+}
+
+
+svg {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.legend {
+
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.scatterDots{}
+
+h2 {
+    color: #ccc;
+    text-shadow: 2px 2px 4px #000000;
+}
+
+div {
+  border: solid 5px #ccc;
+}
+
+circle {
+  opacity: 1;
+}
+line {
+  stroke: #999;
+}
+
