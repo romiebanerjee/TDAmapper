@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<head>
+  <title>Mapper Visualization (force layout)</title>
+</head>
+
+<link rel = "stylesheet" href = "style.css" type = "text/css"  />
+
+<body>
+<div ><h2> Input Data Scatter Plot (PCA2) </h2>
+<svg  width = "500" height = "400" id = "scatterPlot">
+        <g class = "scatter"></g>
+      </svg>
+</div>
+
+  <div id = "main_window">
+    <h2>Mapper Visualization </h2>
+    
+    <svg width = "1400" height = "800" id = "mapperViz">
+    <g class = "links"></g>
+    <g class = "nodes"></g>
+    <foreignobject width="300" height="400" x = "1100" y = "0">
+      <div class = "legend"> </div>                
+    </foreignobject>
+    </svg>
+    </div>
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.2.2/d3.min.js"></script>
+  <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+
+
+  <script src = "mapperViz.js"></script>
+</body>
+</html>
