@@ -8,7 +8,7 @@ Input: Dataset in the form of a numpy array and a real valued continous function
 
 Output: Network graph representing topological summary
 
-The script mapper.py takes as input a numpy array and lens parameters (see example below) and returns a json file mapperViz.json that contain the data of the mapper output simplicial complex (one-dimensional). The javascript file mapperViz.js interprets this json to produce the visualization. 
+The script mapper.py takes as input a numpy array and lens parameters (see example below) and returns a json file mapperViz.json that contains the data of the mapper output simplicial complex (one-dimensional). The javascript file mapperViz.js interprets this json to produce the visualization. 
 
 Example: (Iris dataset)
 
