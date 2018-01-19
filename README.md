@@ -23,6 +23,6 @@ out = mp.Mapper(lens = "PCA", clusterer = "DBSCAN", n_rcover = [100, 3], cluster
 out.write_to_json(data)
 ```
 
-Visualization: https://romiebanerjee.github.io/
+See the visualization [here](https://romiebanerjee.github.io/)
 
 
