@@ -106,33 +106,4 @@ function dragended(d) {
  cv}
  
 
-
-
-//Data --- scatter 
-
-  var svg2 = d3.select("#scatterPlot");
-
-  var data = network.scatter;
-
-  var xScale = d3.scaleLinear().range([0,500]);
-  var yScale = d3.scaleLinear().range([400,0]);
-
-
-  xScale.domain(d3.extent(data, function (d){ return d.x; }));
-  yScale.domain(d3.extent(data, function (d){ return d.y; }));
-
-  
-
-  var plot = svg2.select(".scatter").selectAll(".scatterDots")
-          .data(data);
-        plot.enter().append("circle")
-          
-          .attr("cx", function (d){ return xScale(d.x); })
-          .attr("cy", function (d){ return yScale(d.y); })
-          .attr("r", 2)
-          .attr("fill", "steelblue");
-          
-
-        plot.exit().remove();
-      
-     })
+  })
