@@ -1,27 +1,42 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
 <head>
-  <title>Mapper Visualization (force layout)</title>
+  <title>Mapper</title>
 </head>
 
-<link rel = "stylesheet" href = "style.css" type = "text/css"  />
+
+<style>
+body {
+  background: none;
+}
+
+svg {
+}
+
+h2 {
+    color: #ccc;
+    text-shadow: 2px 2px 4px #000000;
+}
+
+div {
+}
+
+circle {
+  stroke: black;
+
+}
+line {
+  stroke: #999;
+}
+</style>
 
 <body>
-<div ><h2> Input Data Scatter Plot (PCA2) </h2>
-<svg  width = "500" height = "400" id = "scatterPlot">
-        <g class = "scatter"></g>
-      </svg>
-</div>
 
   <div id = "main_window">
-    <h2>Mapper Visualization </h2>
     
-    <svg width = "1400" height = "800" id = "mapperViz">
+    <svg width = "1200" height = "800" id = "mapperViz">
     <g class = "links"></g>
     <g class = "nodes"></g>
-    <foreignobject width="300" height="400" x = "1100" y = "0">
-      <div class = "legend"> </div>                
-    </foreignobject>
     </svg>
     </div>
   
@@ -29,6 +44,103 @@
   <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
 
 
-  <script src = "mapperViz.js"></script>
+  <script>
+    
+    svg = d3.select("#mapperViz"),
+    width = +svg.attr("width"),
+    height = +svg.attr("height");
+
+
+var simulation = d3.forceSimulation()
+  .force('charge', d3.forceManyBody().strength(-10))
+  .force('center', d3.forceCenter(width / 2, height / 2))
+  .force("link", d3.forceLink().id(function(d) { return d.id; }))
+  
+
+
+d3.json("mapperViz.json", function(error,  network){
+  if (error) throw error;
+   
+       
+
+//Force Link Network//
+
+  scaleRadius = d3.scaleLinear()  
+      .domain([0, network.max_weight])
+      .range([10,100]);
+
+  scaleColor = d3.scaleLinear()
+      .domain([0, network.rcover])
+      .range([1,0.2]);
+
+  simulation
+      .nodes(network.nodes)
+      .on("tick", ticked);
+
+  simulation.force("link")
+      .links(network.links);
+
+
+  function updateLinks() {
+    var u = d3.select('.links')
+      .selectAll('line')
+      .data(network.links)
+
+    u.enter()
+      .append('line')
+      .merge(u)
+      .attr('x1', function(d) {return d.source.x;})
+      .attr('y1', function(d) {return d.source.y;})
+      .attr('x2', function(d) {return d.target.x;})
+      .attr('y2', function(d) {return d.target.y;})
+
+    u.exit().remove()
+  }
+
+  function updateNodes() {
+    u = d3.select('.nodes')
+      .selectAll('circle')
+      .data(network.nodes)
+
+    u.enter()
+      .append('circle')
+      .merge(u)
+      .attr('cx', function(d) {return d.x;})
+      .attr('cy', function(d) {return d.y;})
+      .attr('r',  function (d) {return Math.sqrt(scaleRadius(d.weight));})
+      .attr('fill', function(d){ return d3.interpolateBlues(scaleColor(d.group))})
+      .call(d3.drag()
+          .on("start", dragstarted)
+          .on("drag", dragged)
+          .on("end", dragended));
+
+    u.exit().remove()
+  }
+
+  function ticked() {
+    updateLinks()
+    updateNodes()
+  }
+
+  function dragstarted(d) {
+  if (!d3.event.active) simulation.alphaTarget(0.3).restart();
+  d.fx = d.x;
+  d.fy = d.y;
+}
+
+function dragged(d) {
+  d.fx = d3.event.x;
+  d.fy = d3.event.y;
+}
+
+function dragended(d) {
+  if (!d3.event.active) simulation.alphaTarget(0);
+  d.fx = null;
+  d.fy = null;
+ }
+ 
+})
+
+  </script>
 </body>
 </html>
