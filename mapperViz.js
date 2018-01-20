@@ -12,21 +12,6 @@ var simulation = d3.forceSimulation()
 
 d3.json("mapperViz.json", function(error, network){
   if (error) throw error;
-
-// Mapper parameters display //
-
-  d3.select(".legend").selectAll("#lens")
-    .data(network.lens)
-    .enter().append("h3")
-      .text(" Lens = " + network.lens[0]);
-  
-  d3.select(".legend").selectAll("#rcover")
-    .data(network.rcover)
-    .enter().append("h3")
-      .text(" Range cover = " + network.rcover[0]);
-
-  d3.select(".legend").append("h3")
-    .text("Clusterer = DBSCAN")    
           
 
 //Force Link Network//
