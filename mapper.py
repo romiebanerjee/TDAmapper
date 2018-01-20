@@ -108,12 +108,13 @@ class Mapper():
         nodes = [{"id": v, "group": int(v.split(",")[0]), "weight": int(v.split(",")[2])} for v in V]
         links = [{"source": link[0], "target": link[1], "value": 1} for link in E]
 
-        from sklearn.decomposition import PCA
-        flat_data = PCA(n_components = 2).fit_transform(data)
-        scatter = [{"x": flat_data[i,0], "y": flat_data[i,1]} for i in range(len(flat_data))]
+        #from sklearn.decomposition import PCA
+        #flat_data = PCA(n_components = 2).fit_transform(data)
+        #scatter = [{"x": flat_data[i,0], "y": flat_data[i,1]} for i in range(len(flat_data))]
 
         
-        viz = {"scatter": scatter, "lens":[self.lens], "rcover": [self.n_rcover], "max_weight": max_weight, "nodes":nodes, "links": links}
+        viz = {"rcover": self.n_rcover[0], "max_weight": max_weight, "nodes":nodes, "links": links}
+
         viz_json = json.dumps(viz)
 
         file = open("mapperViz.json", 'w')
