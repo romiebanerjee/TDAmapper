@@ -15,12 +15,13 @@ Example: (Iris dataset)
 
 ```python
 import mapper as mp
-
+#--Get data-----------
 from sklearn.datasets import fetch_mldata
-iris = fetch_mldata('iris')
-data = iris.data.tolist()
+data = fetch_mldata('iris').data.tolist()
+#---------------------
 out = mp.Mapper(lens = "PCA", clusterer = "DBSCAN", n_rcover = [100, 3], clusterer_params  = (0.1,5))
 out.write_to_json(data)
+#---------------------
 ```
 
 See the visualization [here](https://romiebanerjee.github.io/)
