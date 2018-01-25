@@ -24,6 +24,6 @@ out.write_to_json(data)
 #---------------------
 ```
 
-See the visualization [here](https://romiebanerjee.github.io/)
+See the visualization [here](https://romiebanerjee.github.io/IRIS/index.html)
 
 
