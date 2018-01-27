@@ -12,7 +12,7 @@ The script mapper.py takes as input a numpy array and lens parameters (see examp
 
 ## Examples
 
-(Iris dataset)
+### Iris dataset
 
 ```python
 import mapper as mp
@@ -24,7 +24,7 @@ out.write_to_json(data)
 See the visualization [here](https://romiebanerjee.github.io/IRIS/index.html)
 
 
-(Concentric Noisy Circles)
+### Concentric Noisy Circles
 
 ```python
 import mapper as mp
@@ -37,6 +37,19 @@ out = mp.Mapper(lens = "PCA", clusterer = "DBSCAN", n_rcover = [50, 2], clustere
 out.write_to_json(data)
 ```
 See the visualization [here](https://romiebanerjee.github.io/CIRCLES/index.html)
+
+### MNIST dataset
+
+```python
+import mapper as mp
+from sklearn.datasets import fetch_mldata
+mnist = fetch_mldata('MNIST original')
+dataf = mnist.data[::70,:].astype(np.float32)
+
+out = mp.Mapper(lens = "PCA", clusterer = "DBSCAN", n_rcover = [50, 2], clusterer_params  = (0.1,5))
+out.write_to_json(data)
+```
+See the visualization [here](https://romiebanerjee.github.io/MNIST/index.html)
 
 
 
