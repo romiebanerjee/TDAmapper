@@ -30,8 +30,7 @@ See the visualization [here](https://romiebanerjee.github.io/IRIS/index.html)
 import mapper as mp
 from sklearn import datasets
 data, labels = datasets.make_circles(n_samples=2000, noise=0.03, factor=0.5)
-X = data[:,0]
-Y = data[:,1]
+X, Y  = data[:,0], data[:,1]
 data = [[x,y] for x,y in zip(X,Y)]
 out = mp.Mapper(lens = "PCA", clusterer = "DBSCAN", n_rcover = [50, 2], clusterer_params  = (0.1,5))
 out.write_to_json(data)
