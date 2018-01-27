@@ -6,7 +6,7 @@ https://research.math.osu.edu/tgda/mapperPBG.pdf
 
 Input: Dataset in the form of a numpy array and a real valued continous function on the dataset
 
-Output: Network graph representing topological summary
+Output: Network graph representing topological summary of the data
 
 The script mapper.py takes as input a numpy array and lens parameters (PCA, Eccentricity, Gauss Density) and returns a json file mapperViz.json that contains the data of simplicial complex (one-dimensional) output from the mapper algorithm. The javascript file mapperViz.js interprets this json to produce the visualization. 
 
