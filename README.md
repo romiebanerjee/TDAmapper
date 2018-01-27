@@ -45,6 +45,9 @@ from sklearn.datasets import fetch_mldata
 mnist = fetch_mldata('MNIST original')
 dataf = mnist.data[::70,:].astype(np.float32)
 
+from sklearn.manifold import TSNE
+data = TSNE(n_components = 10).fit_transform(data).tolist()
+
 out = mp.Mapper(lens = "PCA", clusterer = "DBSCAN", n_rcover = [50, 2], clusterer_params  = (0.1,5))
 out.write_to_json(data)
 ```
