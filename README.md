@@ -49,7 +49,7 @@ dataf = mnist.data[::70,:].astype(np.float32)
 out = mp.Mapper(lens = "PCA", clusterer = "DBSCAN", n_rcover = [50, 2], clusterer_params  = (0.1,5))
 out.write_to_json(data)
 ```
-See the visualization [here](https://romiebanerjee.github.io/MNIST/index.html)
+See the visualization [here](https://romiebanerjee.github.io/MNIST)
 
 
 
