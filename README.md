@@ -14,6 +14,7 @@ The script mapper.py takes as input a numpy array and lens parameters (PCA, Ecce
 
 ### Iris dataset
 
+![](https://romiebanerjee.github.io/IRIS/mapper_iris.png)
 ```python
 import mapper as mp
 from sklearn.datasets import fetch_mldata
@@ -21,7 +22,7 @@ data = fetch_mldata('iris').data.tolist()
 out = mp.Mapper(lens = "PCA", clusterer = "DBSCAN", n_rcover = [100, 3], clusterer_params  = (0.1,5))
 out.write_to_json(data)
 ```
-See the visualization [here](https://romiebanerjee.github.io/IRIS/index.html)
+Click [here](https://romiebanerjee.github.io/IRIS/index.html) for interactive version.
 
 
 ### Concentric Noisy Circles
