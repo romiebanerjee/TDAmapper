@@ -8,7 +8,7 @@ Input: Dataset in the form of a numpy array and a real valued continous function
 
 Output: Network graph representing topological summary of the data
 
-The script mapper.py takes as input a numpy array and lens parameters (PCA, Eccentricity, Gauss Density) and returns a json file mapperViz.json that contains the data of simplicial complex (one-dimensional) output from the mapper algorithm. The javascript file mapperViz.js interprets this json to produce the visualization. 
+The script mapper.py takes as input a numpy array and lens parameters (PCA, Eccentricity, Gauss Density) and returns a json file mapperViz.json that contains the data of the network graph output from the mapper algorithm. The javascript file mapperViz.js interprets this json to produce the visualization. 
 
 ## Examples
 
@@ -16,7 +16,22 @@ The script mapper.py takes as input a numpy array and lens parameters (PCA, Ecce
 
 ![](https://romiebanerjee.github.io/IRIS/mapper_iris.png)
 
-#### Usage
+Click [here](https://romiebanerjee.github.io/IRIS/index.html) for interactive version.
+
+### Concentric Noisy Circles
+
+![](https://romiebanerjee.github.io/CIRCLES/mapper_circles.png)
+
+Click [here](https://romiebanerjee.github.io/CIRCLES/index.html) for interactive version.
+
+### MNIST dataset
+
+![](https://romiebanerjee.github.io/MNIST/mapper_MNIST.png)
+
+Click [here](https://romiebanerjee.github.io/MNIST) for interactive version.
+
+
+## Usage
 
 ```python
 import mapper as mp
@@ -25,16 +40,6 @@ data = fetch_mldata('iris').data.tolist()
 out = mp.Mapper(lens = "PCA", clusterer = "DBSCAN", n_rcover = [100, 3], clusterer_params  = (0.1,5))
 out.write_to_json(data)
 ```
-Click [here](https://romiebanerjee.github.io/IRIS/index.html) for interactive version.
-
-
-### Concentric Noisy Circles
-
-
-![](https://romiebanerjee.github.io/CIRCLES/mapper_circles.png)
-
-#### Usage
-
 ```python
 import mapper as mp
 from sklearn import datasets
@@ -44,9 +49,6 @@ data = [[x,y] for x,y in zip(X,Y)]
 out = mp.Mapper(lens = "PCA", clusterer = "DBSCAN", n_rcover = [50, 2], clusterer_params  = (0.1,5))
 out.write_to_json(data)
 ```
-Click [here](https://romiebanerjee.github.io/CIRCLES/index.html) for interactive version.
-
-### MNIST dataset
 
 ```python
 import mapper as mp
@@ -60,8 +62,6 @@ data = TSNE(n_components = 5).fit_transform(data).tolist()
 out = mp.Mapper(lens = "PCA", clusterer = "DBSCAN", n_rcover = [50, 2], clusterer_params  = (0.1,5))
 out.write_to_json(data)
 ```
-See the visualization [here](https://romiebanerjee.github.io/MNIST)
-
 
 
 
